@@ -1,0 +1,49 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "/Users/evelynhald/Desktop/UCSC/Winter 2025/CMPM 120/CP-Slime-World/assets/overworld.tmx": {
+            "scale": 1.2780468749999998,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 548.8844061372945,
+                "y": 307.89168042056366
+            }
+        },
+        "/Users/evelynhald/Desktop/UCSC/Winter 2025/CMPM 120/CP-Slime-World/assets/overworld.tmx#tileset": {
+            "scaleInDock": 1
+        },
+        "tilemap.tmx": {
+            "scale": 0.2652,
+            "selectedLayer": 3,
+            "viewCenter": {
+                "x": 1928.7330316742082,
+                "y": 1185.897435897436
+            }
+        },
+        "tilemap.tmx#theMindGameTilemap": {
+            "scaleInDock": 1.2295
+        }
+    },
+    "last.exportedFilePath": "/Users/evelynhald/Desktop/UCSC/Winter 2025/CMPM 120/Make the Fake - The Mind Game/assets",
+    "last.imagePath": "/Users/evelynhald/Desktop/UCSC/Winter 2025/CMPM 120/Make the Fake - The Mind Game/assets",
+    "map.height": 16,
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.width": 56,
+    "openFiles": [
+    ],
+    "project": "untitled.tiled-project",
+    "property.type": "bool",
+    "recentFiles": [
+    ],
+    "tileset.embedInMap": true,
+    "tileset.transparentColor": "#000000",
+    "tileset.useTransparentColor": true
+}

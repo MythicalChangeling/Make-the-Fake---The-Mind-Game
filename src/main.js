@@ -5,18 +5,21 @@
 
 let config = {
     type: Phaser.AUTO,
-    width: 900,
-    height: 550,
+    render: {
+        pixelArt: true
+    },
+    width: 896,
+    height: 512,
     scale: {
         autoCenter: Phaser.Scale.CENTER_BOTH
     },
     physics: {
         default: 'arcade',
         arcade: {
-            // debug: true
+            debug: true
         },
     },
-    scene: [Menu]
+    scene: [Play]
 }
 
 let game = new Phaser.Game(config)
