@@ -68,7 +68,6 @@ class Giant extends Phaser.Scene{
         this.input.on('pointerdown', () => {
             if (this.pointer.x < gameWidth - this.tile*6 && this.pointer.x > this.tile*19 && this.pointer.y < gameHeight - this.tile*2 && this.pointer.y > this.tile*6) {
                 this.mouseLock = true
-                console.log(this.mouseLock)
                 this.physics.world.gravity.y = 0
                 let mouseChoose = this.tweens.chain({
                     targets: this.mouse,
@@ -88,22 +87,22 @@ class Giant extends Phaser.Scene{
                         {
                             x: this.tile*129, 
                             y: this.tile*4,
-                            duration: 200,
+                            duration: 150,
                         },
                         {
                             x: this.tile*129.75, 
                             y: this.tile*3.25,
-                            duration: 150,
+                            duration: 100,
                         },
                         {
                             x: this.tile*130.25, 
                             y: this.tile*3,
-                            duration: 100,
+                            duration: 50,
                         },
                         {
                             x: this.tile*130.75, 
                             y: this.tile*3.25,
-                            duration: 100,
+                            duration: 50,
                         },
                         {
                             x: this.tile*131, 
@@ -116,7 +115,6 @@ class Giant extends Phaser.Scene{
             }
             if (this.pointer.x > this.tile*6 && this.pointer.x < gameWidth - this.tile*19 && this.pointer.y < gameHeight - this.tile*2 && this.pointer.y > this.tile*6) {
                 this.mouseLock = true
-                console.log(this.mouseLock)
                 this.physics.world.gravity.y = 0
                 let mouseChoose = this.tweens.chain({
                     targets: this.mouse,
@@ -136,22 +134,22 @@ class Giant extends Phaser.Scene{
                         {
                             x: this.tile*120, 
                             y: this.tile*4,
-                            duration: 200,
+                            duration: 150,
                         },
                         {
                             x: this.tile*119.25, 
                             y: this.tile*3.25,
-                            duration: 150,
+                            duration: 100,
                         },
                         {
                             x: this.tile*118.75, 
                             y: this.tile*3,
-                            duration: 100,
+                            duration: 50,
                         },
                         {
                             x: this.tile*118.25, 
                             y: this.tile*3.25,
-                            duration: 100,
+                            duration: 50,
                         },
                         {
                             x: this.tile*118, 
@@ -187,6 +185,7 @@ class Giant extends Phaser.Scene{
             this.pointer.worldY = this.mouse.y
         }
 
+        //return to play scene
         if (this.mouse.x < this.tile*115) {
             this.scene.start('playScene', {mouseX: this.mouse.x, mouseY: this.mouse.y})
         }

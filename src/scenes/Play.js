@@ -34,7 +34,6 @@ class Play extends Phaser.Scene{
         treeLayer1.setScrollFactor(.8, 1)
 
         // add mouse
-        // this.mouse = this.physics.add.sprite(gameWidth/2 - this.tile*3/2, this.map.heightInPixels - this.tile*3, 'mouse', 0)
         this.mouse = this.physics.add.sprite(this.mouseX, this.mouseY, 'mouse', 0)
         this.mouse.body.setCollideWorldBounds(true)
         this.mouse.body.setSize(this.tile*3, this.tile*2).setOffset(this.tile*3, 0)

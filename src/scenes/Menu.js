@@ -18,8 +18,10 @@ class Menu extends Phaser.Scene{
     }
 
     create() {
-        this.add.text(0, 0, 'click')
+        this.add.text(gameWidth/2, gameHeight/2, 'Click to play').setOrigin(.5)
 
-        this.input.on('pointerdown', () => {this.scene.start('giantScene', {mouseX: 3200, mouseY: 1952})})
+        this.input.on('pointerdown', () => {this.scene.start('playScene', {mouseX: 384, mouseY: 1952})})
+        // this.input.on('pointerdown', () => {this.scene.start('giantScene')})
+        // this.input.on('pointerdown', () => {this.scene.start('playScene', {mouseX: 3200, mouseY: 1952})})
     }
 }
