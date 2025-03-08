@@ -16,6 +16,10 @@ class Giant extends Phaser.Scene{
         this.map = this.add.tilemap('tilemapJSON')
         const tileset = this.map.addTilesetImage('theMindGameTilemap', 'tilesetImage')
         const skyLayer = this.map.createLayer('Sky', tileset, 0, 0)
+
+        //add giant
+        this.giant = this.add.image(this.tile*126, this.tile*8, 'giant')
+
         const gobletLayer = this.map.createLayer('Goblets', tileset, 0, 0)
         const groundLayer = this.map.createLayer('Ground', tileset, 0, 0)
 
@@ -31,51 +35,145 @@ class Giant extends Phaser.Scene{
 
         this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)
 
-        this.physics.add.collider(this.mouse, groundLayer, () => {this.mouse.jump = false})
+        this.physics.add.collider(this.mouse, groundLayer)
 
         //pointer setup
         this.pointer = this.input.activePointer
         this.pointer.worldX = this.mouse.x
         this.pointer.worldY = this.mouse.y
+
+        this.giantRules = this.sound.add('giantRules')
+
+        //giant appears
+        if (!giantShown) {
+            this.mouseLock = true
+            this.giant.setY(this.tile*5)
+            this.sound.play('giantRules')
+            this.time.addEvent({
+                delay: 11000,
+                callback: () => {this.mouseLock = false}
+            })
+            let giantSpawn = this.tweens.add({
+                targets: this.giant,
+                alpha: {from: 0, to: 1},
+                scale: {from: .5, to: 1},
+                y: this.tile*8,
+                duration: 500,
+                ease: 'Quint.easeIn'
+            })
+            giantShown = true
+        }
+
+        //goblet click
+        this.input.on('pointerdown', () => {
+            if (this.pointer.x < gameWidth - this.tile*6 && this.pointer.x > this.tile*19 && this.pointer.y < gameHeight - this.tile*2 && this.pointer.y > this.tile*6) {
+                this.mouseLock = true
+                console.log(this.mouseLock)
+                this.physics.world.gravity.y = 0
+                let mouseChoose = this.tweens.chain({
+                    targets: this.mouse,
+                    tweens: [
+                        {
+                            x: this.tile*128,
+                            duration: 300,
+                        },
+                        {
+                            y: this.tile*6,
+                            duration: 750,
+                        },
+                        {
+                            y: this.tile*6,
+                            duration: 750,
+                        },
+                        {
+                            x: this.tile*129, 
+                            y: this.tile*4,
+                            duration: 200,
+                        },
+                        {
+                            x: this.tile*129.75, 
+                            y: this.tile*3.25,
+                            duration: 150,
+                        },
+                        {
+                            x: this.tile*130.25, 
+                            y: this.tile*3,
+                            duration: 100,
+                        },
+                        {
+                            x: this.tile*130.75, 
+                            y: this.tile*3.25,
+                            duration: 100,
+                        },
+                        {
+                            x: this.tile*131, 
+                            y: this.tile*7,
+                            duration: 150,
+                            alpha: 0
+                        }
+                    ]
+                })
+            }
+            if (this.pointer.x > this.tile*6 && this.pointer.x < gameWidth - this.tile*19 && this.pointer.y < gameHeight - this.tile*2 && this.pointer.y > this.tile*6) {
+                this.mouseLock = true
+                console.log(this.mouseLock)
+                this.physics.world.gravity.y = 0
+                let mouseChoose = this.tweens.chain({
+                    targets: this.mouse,
+                    tweens: [
+                        {
+                            x: this.tile*121,
+                            duration: 300,
+                        },
+                        {
+                            y: this.tile*6,
+                            duration: 750,
+                        },
+                        {
+                            y: this.tile*6,
+                            duration: 750,
+                        },
+                        {
+                            x: this.tile*120, 
+                            y: this.tile*4,
+                            duration: 200,
+                        },
+                        {
+                            x: this.tile*119.25, 
+                            y: this.tile*3.25,
+                            duration: 150,
+                        },
+                        {
+                            x: this.tile*118.75, 
+                            y: this.tile*3,
+                            duration: 100,
+                        },
+                        {
+                            x: this.tile*118.25, 
+                            y: this.tile*3.25,
+                            duration: 100,
+                        },
+                        {
+                            x: this.tile*118, 
+                            y: this.tile*7,
+                            duration: 150,
+                            alpha: 0
+                        }
+                    ]
+                })
+            }
+        })
     }
 
     update() {
-        //reset gravity and camera
-        this.physics.world.gravity.y = this.gravity
-        if (!this.mouse.jump) {
-            // this.cameras.main.setFollowOffset(-this.tile*3/2, this.tile*5)
-            // this.cameras.main.setLerp(0.25, .25)
-        }
-        // if (this.mouse.body.blocked.down) {
-        //     // this.cameras.main.centerOnY(this.mouse.y - this.tile*5)
-        // }
-        // if (this.mouse.body.blocked.down) {
-        //     this.mouse.jump = false
-        // }
-        
         //right/left movement
-        if (this.pointer.worldX > this.mouse.x + this.tile*3) {
+        if (this.pointer.worldX > this.mouse.x + this.tile*3 && !this.mouseLock) {
             this.mouse.setVelocityX(this.speed)
-            this.pointer.worldX += this.speed
         }
 
-        if (this.pointer.worldX < this.mouse.x) {
+        if (this.pointer.worldX < this.mouse.x && !this.mouseLock) {
             this.mouse.setVelocityX(-this.speed)
-            this.pointer.worldX -= this.speed
-        }
-
-        //jump
-        if (this.pointer.worldY < this.mouse.y - this.tile*3 && this.mouse.body.blocked.down) {
-            this.mouse.setVelocityY(-this.jump)
-            this.mouse.jump = true
-            this.cameras.main.setLerp(0.25, 0)
-        }
-
-        //climb setup
-        if (this.mouse.body.blocked.right) {
-            this.physics.world.gravity.y = 0
-            this.mouse.setVelocityY(-this.speed)
-            this.cameras.main.setFollowOffset(-this.tile*3/2, gameHeight/2 - this.tile*7)
+            this.pointer.worldX -= this.speed*2
         }
 
         //pause movement when hovering over the mouse

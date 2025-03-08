@@ -14,17 +14,6 @@ class Play extends Phaser.Scene{
         this.physics.world.gravity.y = this.gravity
     }
 
-    preload() {
-        this.load.path = './assets/'
-
-        this.load.image('tilesetImage', 'tilemap.png')
-        this.load.tilemapTiledJSON('tilemapJSON', 'tilemap.json')
-        this.load.spritesheet('mouse', 'mouse.png', {
-            frameWidth: 192,
-            frameHeight: 64
-        })
-    }
-
     create() {
         //tilemap
         this.map = this.add.tilemap('tilemapJSON')
@@ -32,6 +21,12 @@ class Play extends Phaser.Scene{
         const skyLayer = this.map.createLayer('Sky', tileset, 0, 0)
         const treeLayer1 = this.map.createLayer('Trees 1', tileset, 0, 0)
         const treeLayer2 = this.map.createLayer('Trees 2', tileset, 0, 0)
+
+        //add giant if present
+        if (giantShown) {
+            this.giant = this.add.image(this.tile*126, this.tile*8, 'giant')
+        }
+        
         const gobletLayer = this.map.createLayer('Goblets', tileset, 0, 0)
         const groundLayer = this.map.createLayer('Ground', tileset, 0, 0)
 
