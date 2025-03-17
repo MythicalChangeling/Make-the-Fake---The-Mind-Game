@@ -15,23 +15,23 @@
             "scale": 1.2780468749999998,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 319.62833914053425,
-                "y": 239.81905984473377
+                "x": 320.01956109786664,
+                "y": 239.81905984473383
             }
         },
         "/Users/evelynhald/Desktop/UCSC/Winter 2025/CMPM 120/CP-Slime-World/assets/overworld.tmx#tileset": {
             "scaleInDock": 1
         },
         "tilemap.tmx": {
-            "scale": 0.197,
-            "selectedLayer": 4,
+            "scale": 0.3687,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 2241.116751269036,
-                "y": 992.3857868020305
+                "x": 2240.3037700027126,
+                "y": 1007.5942500678057
             }
         },
         "tilemap.tmx#theMindGameTilemap": {
-            "scaleInDock": 0.8232,
+            "scaleInDock": 0.2805,
             "scaleInEditor": 1.29
         }
     },

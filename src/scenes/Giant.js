@@ -19,6 +19,7 @@ class Giant extends Phaser.Scene{
 
         //add giant
         this.giant = this.add.image(this.tile*126, this.tile*8, 'giant')
+        this.add.image(this.tile*126, this.tile*8, 'giant_fog')
 
         const gobletLayer = this.map.createLayer('Goblets', tileset, 0, 0)
         const groundLayer = this.map.createLayer('Ground', tileset, 0, 0)
@@ -64,9 +65,9 @@ class Giant extends Phaser.Scene{
             giantShown = true
         }
 
-        //goblet click
+        //goblet/giant click
         this.input.on('pointerdown', () => {
-            if (this.pointer.x < gameWidth - this.tile*6 && this.pointer.x > this.tile*19 && this.pointer.y < gameHeight - this.tile*2 && this.pointer.y > this.tile*6) {
+            if (this.pointer.x < gameWidth - this.tile*6 && this.pointer.x > this.tile*19 && this.pointer.y < gameHeight - this.tile*2 && this.pointer.y > this.tile*6 && !this.mouseLock) {
                 this.mouseLock = true
                 this.physics.world.gravity.y = 0
                 let mouseChoose = this.tweens.chain({
@@ -112,8 +113,55 @@ class Giant extends Phaser.Scene{
                         }
                     ]
                 })
-            }
-            if (this.pointer.x > this.tile*6 && this.pointer.x < gameWidth - this.tile*19 && this.pointer.y < gameHeight - this.tile*2 && this.pointer.y > this.tile*6) {
+            } else if (this.pointer.x > this.tile*6 && this.pointer.x < gameWidth - this.tile*19 && this.pointer.y < gameHeight - this.tile*2 && this.pointer.y > this.tile*6 && !this.mouseLock) {
+                this.mouseLock = true
+                this.physics.world.gravity.y = 0
+                let mouseChoose = this.tweens.chain({
+                    targets: this.mouse,
+                    tweens: [
+                        {
+                            x: this.tile*121,
+                            duration: 300,
+                        },
+                        {
+                            y: this.tile*6,
+                            duration: 750,
+                        },
+                        {
+                            y: this.tile*6,
+                            duration: 750,
+                        },
+                        {
+                            x: this.tile*120, 
+                            y: this.tile*4,
+                            duration: 150,
+                        },
+                        {
+                            x: this.tile*119.25, 
+                            y: this.tile*3.25,
+                            duration: 100,
+                        },
+                        {
+                            x: this.tile*118.75, 
+                            y: this.tile*3,
+                            duration: 50,
+                        },
+                        {
+                            x: this.tile*118.25, 
+                            y: this.tile*3.25,
+                            duration: 50,
+                        },
+                        {
+                            x: this.tile*118, 
+                            y: this.tile*7,
+                            duration: 150,
+                            alpha: 0
+                        }
+                    ]
+                })
+            } 
+            else if (this.pointer.x > this.tile*8 && this.pointer.x < gameWidth - this.tile*8 && this.pointer.y < gameHeight - this.tile*10 && this.pointer.y > this.tile*3) {
+                console.log('ping')
                 this.mouseLock = true
                 this.physics.world.gravity.y = 0
                 let mouseChoose = this.tweens.chain({

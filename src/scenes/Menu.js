@@ -3,25 +3,41 @@ class Menu extends Phaser.Scene{
         super('menuScene')
     }
 
-    preload() {
-        this.load.path = './assets/'
-
-        this.load.image('tilesetImage', 'tilemap.png')
-        this.load.tilemapTiledJSON('tilemapJSON', 'tilemap.json')
-        this.load.spritesheet('mouse', 'mouse.png', {
-            frameWidth: 192,
-            frameHeight: 64
-        })
-        this.load.image('giant', 'giant.png')
-
-        this.load.audio('giantRules', 'giant_spawn.m4a')
+    init () {
+        this.tile = 32
     }
 
     create() {
-        this.add.text(gameWidth/2, gameHeight/2, 'Click to play').setOrigin(.5)
+        this.add.image(0, 0, 'title').setOrigin(0, 0)
+        this.icon = this.add.image(this.tile*22 - 4, this.tile*9 - 10, 'icon')
 
-        this.input.on('pointerdown', () => {this.scene.start('playScene', {mouseX: 384, mouseY: 1952})})
+        //pointer setup
+        this.pointer = this.input.activePointer
+
+        //start game by clicking on the icon
+        this.input.on('pointerdown', () => {
+            if (this.pointer.x > this.tile*21 + 2 && this.pointer.x < gameWidth - this.tile*5 + 2 && this.pointer.y > this.tile*8 - 4 && this.pointer.y < gameHeight - this.tile*6 - 4) {
+                this.scene.start('playScene', {mouseX: 384, mouseY: 1952})
+            }
+        })
         // this.input.on('pointerdown', () => {this.scene.start('giantScene')})
         // this.input.on('pointerdown', () => {this.scene.start('playScene', {mouseX: 3200, mouseY: 1952})})
+    }
+
+    update () {
+        //icon reacts when hovered over
+        if (this.pointer.x > this.tile*21 + 2 && this.pointer.x < gameWidth - this.tile*5 + 2 && this.pointer.y > this.tile*8 - 4 && this.pointer.y < gameHeight - this.tile*6 - 4) {
+            this.tweens.add({
+                targets: this.icon,
+                scale: 1.1,
+                duration: 100
+            })
+        } else {
+            this.tweens.add({
+                targets: this.icon,
+                scale: 1,
+                duration: 100
+            })
+        }
     }
 }

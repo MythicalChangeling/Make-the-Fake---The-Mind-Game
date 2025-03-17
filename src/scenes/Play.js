@@ -19,6 +19,7 @@ class Play extends Phaser.Scene{
         this.map = this.add.tilemap('tilemapJSON')
         const tileset = this.map.addTilesetImage('theMindGameTilemap', 'tilesetImage')
         const skyLayer = this.map.createLayer('Sky', tileset, 0, 0)
+        const bushesLayer = this.map.createLayer('Bushes', tileset, 0, 0)
         const treeLayer1 = this.map.createLayer('Trees 1', tileset, 0, 0)
         const treeLayer2 = this.map.createLayer('Trees 2', tileset, 0, 0)
 
@@ -26,11 +27,15 @@ class Play extends Phaser.Scene{
         if (giantShown) {
             this.giant = this.add.image(this.tile*126, this.tile*8, 'giant')
         }
+        this.add.image(this.tile*126, this.tile*8, 'giant_fog')
         
         const gobletLayer = this.map.createLayer('Goblets', tileset, 0, 0)
         const groundLayer = this.map.createLayer('Ground', tileset, 0, 0)
+        const rootsLayer = this.map.createLayer('Roots', tileset, 0, 0)
 
         groundLayer.setCollisionByProperty({collides: true})
+        rootsLayer.setCollisionByProperty({collides: true})
+        bushesLayer.setScrollFactor(.6, 1)
         treeLayer1.setScrollFactor(.8, 1)
 
         // add mouse
@@ -44,11 +49,21 @@ class Play extends Phaser.Scene{
         this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)
 
         this.physics.add.collider(this.mouse, groundLayer, () => {this.mouse.jump = false})
+        this.physics.add.collider(this.mouse, rootsLayer, () => {this.roots = true})
 
         //pointer setup
         this.pointer = this.input.activePointer
         this.pointer.worldX = this.mouse.x
         this.pointer.worldY = this.mouse.y
+
+        //transition
+        this.transition = this.add.image(gameWidth/2, this.map.heightInPixels - gameHeight/2, 'title_fade')
+        this.tweens.add({
+            targets: this.transition,
+            scale: 2,
+            alpha: 0,
+            duration: 200
+        })
     }
 
     update() {
@@ -84,7 +99,7 @@ class Play extends Phaser.Scene{
         }
 
         //climb setup
-        if (this.mouse.body.blocked.right) {
+        if (this.mouse.body.blocked.right && !this.roots) {
             this.physics.world.gravity.y = 0
             this.mouse.setVelocityY(-this.speed)
             this.cameras.main.setFollowOffset(-this.tile*3/2, gameHeight/2 - this.tile*7)
