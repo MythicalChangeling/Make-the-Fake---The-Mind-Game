@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "tilemap.tmx",
+    "activeFile": "",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -23,16 +23,16 @@
             "scaleInDock": 1
         },
         "tilemap.tmx": {
-            "scale": 0.3687,
-            "selectedLayer": 0,
+            "scale": 1.19,
+            "selectedLayer": 5,
             "viewCenter": {
-                "x": 2240.3037700027126,
-                "y": 1007.5942500678057
+                "x": 3762.18487394958,
+                "y": 1828.1512605042017
             }
         },
         "tilemap.tmx#theMindGameTilemap": {
-            "scaleInDock": 0.2805,
-            "scaleInEditor": 1.29
+            "scaleInDock": 0.8817,
+            "scaleInEditor": 0.9228
         }
     },
     "last.exportedFilePath": "/Users/evelynhald/Desktop/UCSC/Winter 2025/CMPM 120/Make the Fake - The Mind Game/assets",
@@ -49,8 +49,8 @@
     "project": "untitled.tiled-project",
     "property.type": "bool",
     "recentFiles": [
-        "/Users/evelynhald/Desktop/UCSC/Winter 2025/CMPM 120/CP-Slime-World/assets/overworld.tmx",
-        "tilemap.tmx"
+        "tilemap.tmx",
+        "/Users/evelynhald/Desktop/UCSC/Winter 2025/CMPM 120/CP-Slime-World/assets/overworld.tmx"
     ],
     "tileset.embedInMap": true,
     "tileset.lastUsedFilter": "All Files (*)",

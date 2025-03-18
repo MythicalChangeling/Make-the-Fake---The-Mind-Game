@@ -18,16 +18,21 @@ class Giant extends Phaser.Scene{
         const skyLayer = this.map.createLayer('Sky', tileset, 0, 0)
 
         //add giant
-        this.giant = this.add.image(this.tile*126, this.tile*8, 'giant')
-        this.add.image(this.tile*126, this.tile*8, 'giant_fog')
+        this.giant = this.add.image(this.tile*140, this.tile*8, 'giant')
+        this.add.image(this.tile*140, this.tile*8, 'giant_fog')
 
         const gobletLayer = this.map.createLayer('Goblets', tileset, 0, 0)
         const groundLayer = this.map.createLayer('Ground', tileset, 0, 0)
+        const rootsLayer = this.map.createLayer('Roots', tileset, 0, 0)
+
+        this.blackScreen = this.add.image(this.tile*140, gameHeight/2, 'black_screen').setAlpha(0)
+        this.transition = this.add.image(this.tile*140, gameHeight/2, 'title_fade').setAlpha(0)
+        
 
         groundLayer.setCollisionByProperty({collides: true})
 
         // add mouse
-        this.mouse = this.physics.add.sprite(this.tile*126, this.tile*13, 'mouse', 0)
+        this.mouse = this.physics.add.sprite(this.tile*140, this.tile*13, 'mouse', 0)
         this.mouse.body.setCollideWorldBounds(true)
         this.mouse.body.setSize(this.tile*3, this.tile*2).setOffset(this.tile*3, 0)
 
@@ -44,6 +49,8 @@ class Giant extends Phaser.Scene{
         this.pointer.worldY = this.mouse.y
 
         this.giantRules = this.sound.add('giantRules')
+        this.giantScream = this.sound.add('giant_death')
+        this.mouseDeath = this.sound.add('mouse_death')
 
         //giant appears
         if (!giantShown) {
@@ -74,39 +81,51 @@ class Giant extends Phaser.Scene{
                     targets: this.mouse,
                     tweens: [
                         {
-                            x: this.tile*128,
+                            x: this.tile*142,
                             duration: 300,
                         },
                         {
                             y: this.tile*6,
                             duration: 750,
+                            onComplete: () => {
+                                this.mouseDeath.play()
+                                this.mouseDeath.on('complete', () => {
+                                    giantShown = false
+                                    this.tweens.add({
+                                        targets: this.transition,
+                                        alpha: 1,
+                                        duration: 200,
+                                        onComplete: () => {this.scene.start('menuScene')}
+                                    })
+                                })
+                            }
                         },
                         {
                             y: this.tile*6,
                             duration: 750,
                         },
                         {
-                            x: this.tile*129, 
+                            x: this.tile*143, 
                             y: this.tile*4,
                             duration: 150,
                         },
                         {
-                            x: this.tile*129.75, 
+                            x: this.tile*143.75, 
                             y: this.tile*3.25,
                             duration: 100,
                         },
                         {
-                            x: this.tile*130.25, 
+                            x: this.tile*144.25, 
                             y: this.tile*3,
                             duration: 50,
                         },
                         {
-                            x: this.tile*130.75, 
+                            x: this.tile*144.75, 
                             y: this.tile*3.25,
                             duration: 50,
                         },
                         {
-                            x: this.tile*131, 
+                            x: this.tile*145, 
                             y: this.tile*7,
                             duration: 150,
                             alpha: 0
@@ -120,39 +139,51 @@ class Giant extends Phaser.Scene{
                     targets: this.mouse,
                     tweens: [
                         {
-                            x: this.tile*121,
+                            x: this.tile*135,
                             duration: 300,
                         },
                         {
                             y: this.tile*6,
                             duration: 750,
+                            onComplete: () => {
+                                this.mouseDeath.play()
+                                this.mouseDeath.on('complete', () => {
+                                    giantShown = false
+                                    this.tweens.add({
+                                        targets: this.transition,
+                                        alpha: 1,
+                                        duration: 200,
+                                        onComplete: () => {this.scene.start('menuScene')}
+                                    })
+                                })
+                            }
                         },
                         {
                             y: this.tile*6,
                             duration: 750,
                         },
                         {
-                            x: this.tile*120, 
+                            x: this.tile*134, 
                             y: this.tile*4,
                             duration: 150,
                         },
                         {
-                            x: this.tile*119.25, 
+                            x: this.tile*133.25, 
                             y: this.tile*3.25,
                             duration: 100,
                         },
                         {
-                            x: this.tile*118.75, 
+                            x: this.tile*132.75, 
                             y: this.tile*3,
                             duration: 50,
                         },
                         {
-                            x: this.tile*118.25, 
+                            x: this.tile*132.25, 
                             y: this.tile*3.25,
                             duration: 50,
                         },
                         {
-                            x: this.tile*118, 
+                            x: this.tile*132, 
                             y: this.tile*7,
                             duration: 150,
                             alpha: 0
@@ -160,15 +191,14 @@ class Giant extends Phaser.Scene{
                     ]
                 })
             } 
-            else if (this.pointer.x > this.tile*8 && this.pointer.x < gameWidth - this.tile*8 && this.pointer.y < gameHeight - this.tile*10 && this.pointer.y > this.tile*3) {
-                console.log('ping')
+            else if (this.pointer.x > this.tile*10 && this.pointer.x < gameWidth - this.tile*10 && this.pointer.y < gameHeight - this.tile*11 && this.pointer.y > this.tile*3 && !this.mouseLock) {
                 this.mouseLock = true
                 this.physics.world.gravity.y = 0
                 let mouseChoose = this.tweens.chain({
                     targets: this.mouse,
                     tweens: [
                         {
-                            x: this.tile*121,
+                            x: this.tile*134,
                             duration: 300,
                         },
                         {
@@ -180,31 +210,51 @@ class Giant extends Phaser.Scene{
                             duration: 750,
                         },
                         {
-                            x: this.tile*120, 
-                            y: this.tile*4,
-                            duration: 150,
+                            x: this.tile*135, 
+                            y: this.tile*2,
+                            duration: 200,
                         },
                         {
-                            x: this.tile*119.25, 
-                            y: this.tile*3.25,
-                            duration: 100,
-                        },
-                        {
-                            x: this.tile*118.75, 
+                            x: this.tile*136, 
                             y: this.tile*3,
-                            duration: 50,
+                            duration: 75,
+                            onComplete: () => {
+                                this.giantScream.play()
+                                this.giantScream.on('complete', () => {
+                                    giantShown = false
+                                    this.tweens.add({
+                                        targets: this.transition,
+                                        alpha: 1,
+                                        duration: 200,
+                                        onComplete: () => {this.scene.start('menuScene')}
+                                    })
+                                })
+                                giantDeath.play()
+                            }
+                        },
+                    ]
+                })
+                let giantDeath = this.tweens.add({
+                    targets: [this.mouse, this.giant],
+                    paused: true,
+                    y: this.tile*25,
+                    duration: 300,
+                    onComplete: () => {
+                        fadeBlack.play()
+                    }
+                })
+                let fadeBlack = this.tweens.chain({
+                    targets: this.blackScreen,
+                    paused: true,
+                    tweens: [
+                        {
+                            alpha: 0,
+                            duration: 2500
                         },
                         {
-                            x: this.tile*118.25, 
-                            y: this.tile*3.25,
-                            duration: 50,
+                            alpha: 1,
+                            duration: 1000
                         },
-                        {
-                            x: this.tile*118, 
-                            y: this.tile*7,
-                            duration: 150,
-                            alpha: 0
-                        }
                     ]
                 })
             }
@@ -234,7 +284,7 @@ class Giant extends Phaser.Scene{
         }
 
         //return to play scene
-        if (this.mouse.x < this.tile*115) {
+        if (this.mouse.x < this.tile*130) {
             this.scene.start('playScene', {mouseX: this.mouse.x, mouseY: this.mouse.y})
         }
     }

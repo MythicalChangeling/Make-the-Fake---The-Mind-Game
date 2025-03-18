@@ -25,9 +25,9 @@ class Play extends Phaser.Scene{
 
         //add giant if present
         if (giantShown) {
-            this.giant = this.add.image(this.tile*126, this.tile*8, 'giant')
+            this.giant = this.add.image(this.tile*140, this.tile*8, 'giant')
         }
-        this.add.image(this.tile*126, this.tile*8, 'giant_fog')
+        this.add.image(this.tile*140, this.tile*8, 'giant_fog')
         
         const gobletLayer = this.map.createLayer('Goblets', tileset, 0, 0)
         const groundLayer = this.map.createLayer('Ground', tileset, 0, 0)
@@ -48,8 +48,8 @@ class Play extends Phaser.Scene{
 
         this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)
 
-        this.physics.add.collider(this.mouse, groundLayer, () => {this.mouse.jump = false})
-        this.physics.add.collider(this.mouse, rootsLayer, () => {this.roots = true})
+        this.physics.add.collider(this.mouse, groundLayer, () => {this.mouse.jump = false, this.mouse.climb = true})
+        this.physics.add.collider(this.mouse, rootsLayer, () => {this.mouse.climb = false})
 
         //pointer setup
         this.pointer = this.input.activePointer
@@ -99,7 +99,7 @@ class Play extends Phaser.Scene{
         }
 
         //climb setup
-        if (this.mouse.body.blocked.right && !this.roots) {
+        if (this.mouse.body.blocked.right && this.mouse.climb) {
             this.physics.world.gravity.y = 0
             this.mouse.setVelocityY(-this.speed)
             this.cameras.main.setFollowOffset(-this.tile*3/2, gameHeight/2 - this.tile*7)
@@ -116,7 +116,7 @@ class Play extends Phaser.Scene{
             this.pointer.worldY = this.mouse.y
         }
 
-        if (this.mouse.x >= this.tile*126) {
+        if (this.mouse.x >= this.tile*140) {
             this.scene.start('giantScene')
         }
     }

@@ -20,11 +20,15 @@ class Menu extends Phaser.Scene{
                 this.scene.start('playScene', {mouseX: 384, mouseY: 1952})
             }
         })
-        // this.input.on('pointerdown', () => {this.scene.start('giantScene')})
-        // this.input.on('pointerdown', () => {this.scene.start('playScene', {mouseX: 3200, mouseY: 1952})})
+        // this.input.on('pointerdown', () => {
+        //     if (this.pointer.x > this.tile*21 + 2 && this.pointer.x < gameWidth - this.tile*5 + 2 && this.pointer.y > this.tile*8 - 4 && this.pointer.y < gameHeight - this.tile*6 - 4) {
+        //         // this.scene.start('playScene', {mouseX: 3200, mouseY: 1952})
+        //         this.scene.start('giantScene')
+        //     }
+        // })
     }
-
-    update () {
+        
+    update() {
         //icon reacts when hovered over
         if (this.pointer.x > this.tile*21 + 2 && this.pointer.x < gameWidth - this.tile*5 + 2 && this.pointer.y > this.tile*8 - 4 && this.pointer.y < gameHeight - this.tile*6 - 4) {
             this.tweens.add({
