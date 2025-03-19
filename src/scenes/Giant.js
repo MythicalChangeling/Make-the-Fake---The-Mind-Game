@@ -128,6 +128,7 @@ class Giant extends Phaser.Scene{
                             onComplete: () => {
                                 this.mouseDeath.play()
                                 this.wind.stop()
+                                windy = false
                                 this.mouse.anims.stop()
                                 this.time.addEvent({
                                     delay: 6800,
@@ -206,6 +207,7 @@ class Giant extends Phaser.Scene{
                             onComplete: () => {
                                 this.mouseDeath.play()
                                 this.wind.stop()
+                                windy = false
                                 this.mouse.anims.stop()
                                 this.time.addEvent({
                                     delay: 6800,
@@ -308,6 +310,7 @@ class Giant extends Phaser.Scene{
                             onComplete: () => {
                                 this.giantScream.play()
                                 this.wind.stop()
+                                windy = false
                                 this.giantScream.on('complete', () => {
                                     giantShown = false
                                     this.tweens.add({

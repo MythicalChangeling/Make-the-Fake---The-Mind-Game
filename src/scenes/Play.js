@@ -41,7 +41,7 @@ class Play extends Phaser.Scene{
 
         // add mouse
         this.mouse = this.physics.add.sprite(this.mouseX, this.mouseY, 'mouse', 4)
-        this.mouse.body.setCollideWorldBounds(true)
+        this.mouse.body.setCollideWorldBounds(true, 0, .5)
         this.mouse.body.setSize(this.tile*3, this.tile*2).setOffset(this.tile*3, 0)
         this.mouse.anims.create({
             key: 'mouse_run',
@@ -53,7 +53,7 @@ class Play extends Phaser.Scene{
             key: 'mouse_jump',
             frameRate: 10,
             repeat: 0,
-            frames: this.anims.generateFrameNumbers('mouse', {frames: [0, 1, 2, 3, 0]})
+            frames: this.anims.generateFrameNumbers('mouse', {frames: [2, 3, 0]})
         })
         this.mouse.anims.create({
             key: 'mouse_climb',
@@ -67,12 +67,15 @@ class Play extends Phaser.Scene{
 
         this.physics.world.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)
 
-        this.physics.add.collider(this.mouse, groundLayer, () => {this.mouse.jump = false, this.mouse.climb = true})
-        this.physics.add.collider(this.mouse, rootsLayer, () => {this.mouse.climb = false})
+        this.physics.add.collider(this.mouse, groundLayer, () => {this.mouse.jump = false, this.mouse.canClimb = true, this.mouse.rootsCollide = false})
+        this.physics.add.collider(this.mouse, rootsLayer, () => {this.mouse.jump = false, this.mouse.canClimb = false, this.mouse.rootsCollide = true})
 
-        //wind sound
-        this.wind = this.sound.add('wind', {loop: true})
-        this.wind.play()
+        //wind sound (check to make sure it's not already playing from the giant scene)
+        if (!windy) {
+            this.wind = this.sound.add('wind', {loop: true})
+            this.wind.play()
+            windy = true
+        }
 
         //pointer setup
         this.pointer = this.input.activePointer
@@ -92,7 +95,7 @@ class Play extends Phaser.Scene{
     update() {
         //reset gravity, camera, and mouse rotation when needed
         this.physics.world.gravity.y = this.gravity
-        if (!this.mouse.jump) {
+        if (!this.mouse.jump && !this.mouse.rootsCollide) {
             this.cameras.main.setFollowOffset(-this.tile*3/2, this.tile*5)
             this.cameras.main.setLerp(0.25, .25)
         }
@@ -100,11 +103,35 @@ class Play extends Phaser.Scene{
             this.mouse.angle = 0
             this.mouse.body.setSize(this.tile*3, this.tile*2).setOffset(this.tile*3, 0)
         }
+        this.mouse.climbing = false
         
+        //climb setup
+        if (this.mouse.body.blocked.right && this.mouse.canClimb) {
+            this.mouse.angle = -90
+            this.mouse.body.setSize(this.tile*2, this.tile*3).setOffset(this.tile*2, -this.tile*2)
+            this.mouse.climbing = true
+            this.mouse.anims.play('mouse_climb', true)
+            this.physics.world.gravity.y = 0
+            this.mouse.setVelocityY(-this.speed*1.5)
+            this.cameras.main.setFollowOffset(-this.tile*3/2, gameHeight/2 - this.tile*7)
+        }
+
+        //jump
+        if (this.pointer.worldY < this.mouse.y - this.tile*3 && !this.mouse.jump && !this.mouse.climbing && this.mouse.body.blocked.down) {
+            this.mouse.anims.play('mouse_jump', true)
+            this.mouse.jump = true
+            this.mouse.on('animationcomplete', () => {
+                this.mouse.setVelocityY(-this.jump)
+                this.cameras.main.setLerp(0.25, 0)
+            })
+        }
+
         //right/left movement
         if (this.pointer.worldX > this.mouse.x + this.tile*3) {
-            if (this.mouse.body.blocked.down) {
+            if (!this.mouse.jump && !this.mouse.climbing) {
                 this.mouse.anims.play('mouse_run', true)
+            }
+            if (this.mouse.body.blocked.down) {
                 this.mouse.body.setSize(this.tile*3, this.tile*2).setOffset(this.tile*3, 0)
             }
             this.mouse.setFlipX(false)
@@ -120,24 +147,6 @@ class Play extends Phaser.Scene{
             this.mouse.body.setSize(this.tile*3, this.tile*2).setOffset(-1, 0)
             this.mouse.setVelocityX(-this.speed)
             this.pointer.worldX -= this.speed
-        }
-
-        //jump
-        if (this.pointer.worldY < this.mouse.y - this.tile*3 && this.mouse.body.blocked.down) {
-            this.mouse.anims.play('mouse_jump')
-            this.mouse.setVelocityY(-this.jump)
-            this.mouse.jump = true
-            this.cameras.main.setLerp(0.25, 0)
-        }
-
-        //climb setup
-        if (this.mouse.body.blocked.right && this.mouse.climb) {
-            this.mouse.angle = -90
-            this.mouse.body.setSize(this.tile*2, this.tile*3).setOffset(this.tile*2, -this.tile*2)
-            this.mouse.anims.play('mouse_climb', true)
-            this.physics.world.gravity.y = 0
-            this.mouse.setVelocityY(-this.speed*1.5)
-            this.cameras.main.setFollowOffset(-this.tile*3/2, gameHeight/2 - this.tile*7)
         }
 
         //pause movement when hovering over the mouse character
