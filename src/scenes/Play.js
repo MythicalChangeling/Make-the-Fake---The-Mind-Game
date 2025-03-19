@@ -33,6 +33,7 @@ class Play extends Phaser.Scene{
         const groundLayer = this.map.createLayer('Ground', tileset, 0, 0)
         const rootsLayer = this.map.createLayer('Roots', tileset, 0, 0)
 
+        //collision and parallax
         groundLayer.setCollisionByProperty({collides: true})
         rootsLayer.setCollisionByProperty({collides: true})
         bushesLayer.setScrollFactor(.6, 1)
@@ -69,6 +70,10 @@ class Play extends Phaser.Scene{
         this.physics.add.collider(this.mouse, groundLayer, () => {this.mouse.jump = false, this.mouse.climb = true})
         this.physics.add.collider(this.mouse, rootsLayer, () => {this.mouse.climb = false})
 
+        //wind sound
+        this.wind = this.sound.add('wind', {loop: true})
+        this.wind.play()
+
         //pointer setup
         this.pointer = this.input.activePointer
         this.pointer.worldX = this.mouse.x
@@ -85,7 +90,7 @@ class Play extends Phaser.Scene{
     }
 
     update() {
-        //reset gravity and camera
+        //reset gravity, camera, and mouse rotation when needed
         this.physics.world.gravity.y = this.gravity
         if (!this.mouse.jump) {
             this.cameras.main.setFollowOffset(-this.tile*3/2, this.tile*5)
@@ -100,11 +105,9 @@ class Play extends Phaser.Scene{
         if (this.pointer.worldX > this.mouse.x + this.tile*3) {
             if (this.mouse.body.blocked.down) {
                 this.mouse.anims.play('mouse_run', true)
-            }
-            this.mouse.setFlipX(false)
-            if (this.mouse.body.blocked.down) {
                 this.mouse.body.setSize(this.tile*3, this.tile*2).setOffset(this.tile*3, 0)
             }
+            this.mouse.setFlipX(false)
             this.mouse.setVelocityX(this.speed)
             this.pointer.worldX += this.speed
         }
@@ -131,15 +134,13 @@ class Play extends Phaser.Scene{
         if (this.mouse.body.blocked.right && this.mouse.climb) {
             this.mouse.angle = -90
             this.mouse.body.setSize(this.tile*2, this.tile*3).setOffset(this.tile*2, -this.tile*2)
-            // this.mouse.x = this.tile*111.5
-            // this.mouse.body.setOffset(-this.tile*7, 0)
             this.mouse.anims.play('mouse_climb', true)
             this.physics.world.gravity.y = 0
             this.mouse.setVelocityY(-this.speed*1.5)
             this.cameras.main.setFollowOffset(-this.tile*3/2, gameHeight/2 - this.tile*7)
         }
 
-        //pause movement when hovering over the mouse
+        //pause movement when hovering over the mouse character
         if (this.pointer.worldX > this.mouse.x && this.pointer.worldX < this.mouse.x + this.tile*3) {
             this.mouse.anims.stop()
             this.mouse.setFrame(4) 
@@ -154,8 +155,9 @@ class Play extends Phaser.Scene{
             this.pointer.worldY = this.mouse.y
         }
 
+        //jump to giant scene (kept separate to more easily manage locking the camera)
         if (this.mouse.x >= this.tile*140) {
-            this.scene.start('giantScene')
+            this.scene.start('giantScene', {wind: this.wind})
         }
     }
 }

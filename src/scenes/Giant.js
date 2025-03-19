@@ -3,7 +3,9 @@ class Giant extends Phaser.Scene{
         super('giantScene')
     }
 
-    init() {
+    init(sound) {
+        this.wind = sound.wind
+
         this.tile = 32
         this.speed = 250
         this.jump = 500
@@ -33,7 +35,6 @@ class Giant extends Phaser.Scene{
 
         this.blackScreen = this.add.image(this.tile*140, gameHeight/2, 'black_screen').setAlpha(0)
         this.transition = this.add.image(this.tile*140, gameHeight/2, 'title_fade').setAlpha(0)
-        
 
         groundLayer.setCollisionByProperty({collides: true})
 
@@ -66,6 +67,7 @@ class Giant extends Phaser.Scene{
         this.pointer.worldX = this.mouse.x
         this.pointer.worldY = this.mouse.y
 
+        //sounds
         this.giantRules = this.sound.add('giantRules')
         this.giantScream = this.sound.add('giant_death')
         this.mouseDeath = this.sound.add('mouse_death')
@@ -77,7 +79,9 @@ class Giant extends Phaser.Scene{
             this.sound.play('giantRules')
             this.time.addEvent({
                 delay: 11000,
-                callback: () => {this.mouseLock = false}
+                callback: () => {
+                    this.mouseLock = false
+                }
             })
             this.time.addEvent({
                 delay: 5050,
@@ -99,7 +103,7 @@ class Giant extends Phaser.Scene{
             giantShown = true
         }
 
-        //goblet/giant click
+        //player clicks on a goblet or the giant
         this.input.on('pointerdown', () => {
             if (this.pointer.x < gameWidth - this.tile*6 && this.pointer.x > this.tile*19 && this.pointer.y < gameHeight - this.tile*2 && this.pointer.y > this.tile*6 && !this.mouseLock) {
                 this.mouseLock = true
@@ -123,6 +127,7 @@ class Giant extends Phaser.Scene{
                             duration: 750,
                             onComplete: () => {
                                 this.mouseDeath.play()
+                                this.wind.stop()
                                 this.mouse.anims.stop()
                                 this.time.addEvent({
                                     delay: 6800,
@@ -200,6 +205,7 @@ class Giant extends Phaser.Scene{
                             duration: 750,
                             onComplete: () => {
                                 this.mouseDeath.play()
+                                this.wind.stop()
                                 this.mouse.anims.stop()
                                 this.time.addEvent({
                                     delay: 6800,
@@ -301,6 +307,7 @@ class Giant extends Phaser.Scene{
                             duration: 75,
                             onComplete: () => {
                                 this.giantScream.play()
+                                this.wind.stop()
                                 this.giantScream.on('complete', () => {
                                     giantShown = false
                                     this.tweens.add({
@@ -359,7 +366,7 @@ class Giant extends Phaser.Scene{
             this.pointer.worldX -= this.speed*2
         }
 
-        //pause movement when hovering over the mouse
+        //pause movement when hovering over the mouse character
         if (this.pointer.worldX > this.mouse.x && this.pointer.worldX < this.mouse.x + this.tile*3) {
             this.mouse.anims.stop()
             this.mouse.setFrame(4) 

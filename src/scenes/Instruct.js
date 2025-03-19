@@ -25,6 +25,7 @@ class Instruct extends Phaser.Scene{
         this.load.audio('giantRules', 'giant_spawn.m4a')
         this.load.audio('giant_death', 'giant_death.m4a')
         this.load.audio('mouse_death', 'mouse_death.m4a')
+        this.load.audio('wind', 'wind.m4a')
     }
 
     create() {

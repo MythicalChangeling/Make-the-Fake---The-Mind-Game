@@ -1,5 +1,8 @@
 //Evelyn Hald
-//The Mind Game
+//The Mind Game from "Ender's Game"
+
+//Major Phaser Components: Physics, Animation, Tweens, Timers, Tilemap
+//Polish and Style: Use of parallax in the background, controls by moving the mouse rather than keyboard inputs to mimic the mind controls from the movie, choice to include dialogue from the movie at the game's end to reflect the game's narrative impact
 
 'use strict'
 
