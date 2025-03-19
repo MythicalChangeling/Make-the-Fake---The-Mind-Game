@@ -18,8 +18,14 @@ class Giant extends Phaser.Scene{
         const skyLayer = this.map.createLayer('Sky', tileset, 0, 0)
 
         //add giant
-        this.giant = this.add.image(this.tile*140, this.tile*8, 'giant')
+        this.giant = this.add.sprite(this.tile*140, this.tile*8, 'giant', 1)
         this.add.image(this.tile*140, this.tile*8, 'giant_fog')
+        this.giantTalk = this.giant.anims.create({
+            key: 'giant_talk',
+            frameRate: 3,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('giant', {start: 0, end: 1})
+        })
 
         const gobletLayer = this.map.createLayer('Goblets', tileset, 0, 0)
         const groundLayer = this.map.createLayer('Ground', tileset, 0, 0)
@@ -32,9 +38,21 @@ class Giant extends Phaser.Scene{
         groundLayer.setCollisionByProperty({collides: true})
 
         // add mouse
-        this.mouse = this.physics.add.sprite(this.tile*140, this.tile*13, 'mouse', 0)
+        this.mouse = this.physics.add.sprite(this.tile*140, this.tile*13, 'mouse', 4)
         this.mouse.body.setCollideWorldBounds(true)
         this.mouse.body.setSize(this.tile*3, this.tile*2).setOffset(this.tile*3, 0)
+        this.mouse.anims.create({
+            key: 'mouse_run',
+            frameRate: 10,
+            repeat: -1,
+            frames: this.anims.generateFrameNumbers('mouse', {start: 0, end: 3})
+        })
+        this.mouse.anims.create({
+            key: 'mouse_climb',
+            frameRate: 10,
+            repeat: 0,
+            frames: this.anims.generateFrameNumbers('mouse', {frames: [0, 1, 2, 2, 3]})
+        })
 
         this.cameras.main.setBounds(0, 0, this.map.widthInPixels, this.map.heightInPixels)
         this.cameras.main.centerOn(this.mouse.x, 0)
@@ -61,6 +79,15 @@ class Giant extends Phaser.Scene{
                 delay: 11000,
                 callback: () => {this.mouseLock = false}
             })
+            this.time.addEvent({
+                delay: 5050,
+                callback: () => {
+                    this.giant.anims.play('giant_talk', true)
+                    this.time.addEvent({
+                        delay: 5950,
+                        callback: () => {this.giant.anims.stop()}
+                    })}
+            })
             let giantSpawn = this.tweens.add({
                 targets: this.giant,
                 alpha: {from: 0, to: 1},
@@ -77,18 +104,30 @@ class Giant extends Phaser.Scene{
             if (this.pointer.x < gameWidth - this.tile*6 && this.pointer.x > this.tile*19 && this.pointer.y < gameHeight - this.tile*2 && this.pointer.y > this.tile*6 && !this.mouseLock) {
                 this.mouseLock = true
                 this.physics.world.gravity.y = 0
+                this.mouse.anims.play('mouse_run')
+                this.mouse.setVelocityX(0)
                 let mouseChoose = this.tweens.chain({
                     targets: this.mouse,
                     tweens: [
                         {
-                            x: this.tile*142,
+                            x: this.tile*144,
                             duration: 300,
+                            onComplete: () => {
+                                this.mouse.angle = -90
+                                this.mouse.body.setSize(this.tile*2, this.tile*3).setOffset(this.tile*2, -this.tile*2)
+                                this.mouse.anims.play('mouse_climb')
+                            }
                         },
                         {
-                            y: this.tile*6,
+                            y: this.tile*8,
                             duration: 750,
                             onComplete: () => {
                                 this.mouseDeath.play()
+                                this.mouse.anims.stop()
+                                this.time.addEvent({
+                                    delay: 6800,
+                                    callback: () => {this.giant.anims.play('giant_talk')}
+                                })
                                 this.mouseDeath.on('complete', () => {
                                     giantShown = false
                                     this.tweens.add({
@@ -101,13 +140,18 @@ class Giant extends Phaser.Scene{
                             }
                         },
                         {
-                            y: this.tile*6,
+                            y: this.tile*8,
                             duration: 750,
                         },
                         {
                             x: this.tile*143, 
                             y: this.tile*4,
                             duration: 150,
+                            onComplete: () => {
+                                this.mouse.angle = 0
+                                this.mouse.body.setSize(this.tile*3, this.tile*2).setOffset(this.tile*3, 0)
+                                this.mouse.setFrame(0)
+                            }
                         },
                         {
                             x: this.tile*143.75, 
@@ -135,18 +179,32 @@ class Giant extends Phaser.Scene{
             } else if (this.pointer.x > this.tile*6 && this.pointer.x < gameWidth - this.tile*19 && this.pointer.y < gameHeight - this.tile*2 && this.pointer.y > this.tile*6 && !this.mouseLock) {
                 this.mouseLock = true
                 this.physics.world.gravity.y = 0
+                this.mouse.anims.play('mouse_run')
+                this.mouse.setFlipX(true)
+                this.mouse.setVelocityX(0)
+                this.mouse.body.setSize(this.tile*3, this.tile*2).setOffset(-1, 0)
                 let mouseChoose = this.tweens.chain({
                     targets: this.mouse,
                     tweens: [
                         {
-                            x: this.tile*135,
+                            x: this.tile*136,
                             duration: 300,
+                            onComplete: () => {
+                                this.mouse.angle = 90
+                                this.mouse.body.setSize(this.tile*2, this.tile*3).setOffset(this.tile*2, -this.tile*2)
+                                this.mouse.anims.play('mouse_climb')
+                            }
                         },
                         {
-                            y: this.tile*6,
+                            y: this.tile*8,
                             duration: 750,
                             onComplete: () => {
                                 this.mouseDeath.play()
+                                this.mouse.anims.stop()
+                                this.time.addEvent({
+                                    delay: 6800,
+                                    callback: () => {this.giant.anims.play('giant_talk')}
+                                })
                                 this.mouseDeath.on('complete', () => {
                                     giantShown = false
                                     this.tweens.add({
@@ -159,31 +217,36 @@ class Giant extends Phaser.Scene{
                             }
                         },
                         {
-                            y: this.tile*6,
+                            y: this.tile*8,
                             duration: 750,
                         },
                         {
-                            x: this.tile*134, 
+                            x: this.tile*137, 
                             y: this.tile*4,
                             duration: 150,
+                            onComplete: () => {
+                                this.mouse.angle = 0
+                                this.mouse.body.setSize(this.tile*3, this.tile*2).setOffset(-1, 0)
+                                this.mouse.setFrame(0)
+                            }
                         },
                         {
-                            x: this.tile*133.25, 
+                            x: this.tile*136.25, 
                             y: this.tile*3.25,
                             duration: 100,
                         },
                         {
-                            x: this.tile*132.75, 
+                            x: this.tile*135.75, 
                             y: this.tile*3,
                             duration: 50,
                         },
                         {
-                            x: this.tile*132.25, 
+                            x: this.tile*135.25, 
                             y: this.tile*3.25,
                             duration: 50,
                         },
                         {
-                            x: this.tile*132, 
+                            x: this.tile*135, 
                             y: this.tile*7,
                             duration: 150,
                             alpha: 0
@@ -194,20 +257,38 @@ class Giant extends Phaser.Scene{
             else if (this.pointer.x > this.tile*10 && this.pointer.x < gameWidth - this.tile*10 && this.pointer.y < gameHeight - this.tile*11 && this.pointer.y > this.tile*3 && !this.mouseLock) {
                 this.mouseLock = true
                 this.physics.world.gravity.y = 0
+                this.mouse.anims.play('mouse_run')
+                this.mouse.setFlipX(true)
+                this.mouse.setVelocityX(0)
+                this.mouse.body.setSize(this.tile*3, this.tile*2).setOffset(-1, 0)
                 let mouseChoose = this.tweens.chain({
                     targets: this.mouse,
                     tweens: [
                         {
-                            x: this.tile*134,
+                            x: this.tile*136,
                             duration: 300,
+                            onComplete: () => {
+                                this.mouse.angle = 90
+                                this.mouse.body.setSize(this.tile*2, this.tile*3).setOffset(this.tile*2, -this.tile*2)
+                                this.mouse.anims.play('mouse_climb')
+                            }
                         },
                         {
-                            y: this.tile*6,
+                            y: this.tile*8,
                             duration: 750,
+                            onComplete: () => {
+                                this.mouse.anims.stop()
+                            }
                         },
                         {
-                            y: this.tile*6,
+                            y: this.tile*8,
                             duration: 750,
+                            onComplete: () => {
+                                this.mouse.angle = 0
+                                this.mouse.setFlipX(false)
+                                this.mouse.body.setSize(this.tile*3, this.tile*2).setOffset(-1, 0)
+                                this.mouse.setFrame(0)
+                            }
                         },
                         {
                             x: this.tile*135, 
@@ -264,21 +345,31 @@ class Giant extends Phaser.Scene{
     update() {
         //right/left movement
         if (this.pointer.worldX > this.mouse.x + this.tile*3 && !this.mouseLock) {
+            this.mouse.anims.play('mouse_run', true)
+            this.mouse.setFlipX(false)
+            this.mouse.body.setSize(this.tile*3, this.tile*2).setOffset(this.tile*3, 0)
             this.mouse.setVelocityX(this.speed)
         }
 
         if (this.pointer.worldX < this.mouse.x && !this.mouseLock) {
+            this.mouse.anims.play('mouse_run', true)
+            this.mouse.setFlipX(true)
+            this.mouse.body.setSize(this.tile*3, this.tile*2).setOffset(-1, 0)
             this.mouse.setVelocityX(-this.speed)
             this.pointer.worldX -= this.speed*2
         }
 
         //pause movement when hovering over the mouse
         if (this.pointer.worldX > this.mouse.x && this.pointer.worldX < this.mouse.x + this.tile*3) {
+            this.mouse.anims.stop()
+            this.mouse.setFrame(4) 
             this.mouse.setVelocityX(0)
         }
 
         //pause movement if the cursor leaves the game area
         if (!this.input.isOver) {
+            this.mouse.anims.stop()
+            this.mouse.setFrame(4) 
             this.mouse.setVelocityX(0)
             this.pointer.worldY = this.mouse.y
         }

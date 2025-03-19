@@ -12,7 +12,10 @@ class Instruct extends Phaser.Scene{
             frameWidth: 192,
             frameHeight: 64
         })
-        this.load.image('giant', 'giant.png')
+        this.load.spritesheet('giant', 'giant.png', {
+            frameWidth: 896,
+            frameHeight: 512
+        })
         this.load.image('giant_fog', 'giant_fog.png')
         this.load.image('black_screen', 'black_screen.png')
         this.load.image('title', 'title.png')

@@ -3,7 +3,7 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "tilemap.tmx",
     "expandedProjectPaths": [
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
@@ -12,22 +12,22 @@
             "scaleInDock": 0.8232
         },
         "/Users/evelynhald/Desktop/UCSC/Winter 2025/CMPM 120/CP-Slime-World/assets/overworld.tmx": {
-            "scale": 1.2780468749999998,
+            "scale": 1.27,
             "selectedLayer": 1,
             "viewCenter": {
-                "x": 320.01956109786664,
-                "y": 239.81905984473383
+                "x": 319.6850393700787,
+                "y": 239.76377952755905
             }
         },
         "/Users/evelynhald/Desktop/UCSC/Winter 2025/CMPM 120/CP-Slime-World/assets/overworld.tmx#tileset": {
             "scaleInDock": 1
         },
         "tilemap.tmx": {
-            "scale": 1.19,
+            "scale": 0.2589,
             "selectedLayer": 5,
             "viewCenter": {
-                "x": 3762.18487394958,
-                "y": 1828.1512605042017
+                "x": 2889.146388567014,
+                "y": 816.9177288528389
             }
         },
         "tilemap.tmx#theMindGameTilemap": {
@@ -49,8 +49,8 @@
     "project": "untitled.tiled-project",
     "property.type": "bool",
     "recentFiles": [
-        "tilemap.tmx",
-        "/Users/evelynhald/Desktop/UCSC/Winter 2025/CMPM 120/CP-Slime-World/assets/overworld.tmx"
+        "/Users/evelynhald/Desktop/UCSC/Winter 2025/CMPM 120/CP-Slime-World/assets/overworld.tmx",
+        "tilemap.tmx"
     ],
     "tileset.embedInMap": true,
     "tileset.lastUsedFilter": "All Files (*)",
